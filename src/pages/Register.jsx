@@ -1,18 +1,25 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 
-function Login({ iniciarSesion }) {
+function Register({ iniciarSesion }) {
+  const [nombre, setNombre] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
 
   const navigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault()
 
+    if (password !== confirmPassword) {
+      alert("Las contraseñas no coinciden")
+      return
+    }
+
     iniciarSesion({
-      nombre: "@usuario",
-      email: email
+      nombre,
+      email
     })
 
     navigate("/")
@@ -21,13 +28,23 @@ function Login({ iniciarSesion }) {
   return (
     <main className="container auth-container">
       <section className="auth-card">
-        <h1>Iniciar sesión</h1>
+        <h1>Crear cuenta</h1>
 
         <p>
-          Accedé a tu cuenta de Steam MVP.
+          Registrate para acceder a Steam MVP.
         </p>
 
         <form onSubmit={handleSubmit}>
+          <label>Nombre</label>
+
+          <input
+            type="text"
+            placeholder="Tu nombre"
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+            required
+          />
+
           <label>Email</label>
 
           <input
@@ -42,9 +59,21 @@ function Login({ iniciarSesion }) {
 
           <input
             type="password"
-            placeholder="Ingresá tu contraseña"
+            placeholder="Ingresá una contraseña"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+
+          <label>Confirmar contraseña</label>
+
+          <input
+            type="password"
+            placeholder="Repetí la contraseña"
+            value={confirmPassword}
+            onChange={(e) =>
+              setConfirmPassword(e.target.value)
+            }
             required
           />
 
@@ -52,15 +81,15 @@ function Login({ iniciarSesion }) {
             className="btn btn-buy"
             type="submit"
           >
-            Iniciar sesión
+            Registrarse
           </button>
         </form>
 
         <p className="auth-link">
-          ¿No tenés cuenta?
+          ¿Ya tenés cuenta?
 
-          <Link to="/register">
-            Registrate
+          <Link to="/login">
+            Iniciar sesión
           </Link>
         </p>
       </section>
@@ -68,4 +97,4 @@ function Login({ iniciarSesion }) {
   )
 }
 
-export default Login
+export default Register
