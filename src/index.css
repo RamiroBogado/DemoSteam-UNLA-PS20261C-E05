@@ -113,8 +113,47 @@ body {
   color: #c7d5e0;
 }
 
-.detalle-texto {
+.checkout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 30px;
+}
+
+.checkout-juego,
+.resumen-compra {
+  background-color: #16202d;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.4);
+}
+
+.checkout-juego {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 25px;
+  margin-top: 20px;
+}
+
+.checkout-juego img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.checkout-juego p,
+.resumen-compra p {
   color: #c7d5e0;
+}
+
+.checkout-juego strong,
+.resumen-compra strong {
+  color: #a4d007;
+}
+
+@media (max-width: 900px) {
+  .checkout,
+  .checkout-juego {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 800px) {
