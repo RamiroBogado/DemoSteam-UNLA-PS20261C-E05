@@ -19,45 +19,53 @@ function Navbar({
       <div className="nav-links">
         <Link to="/">Tienda</Link>
 
-        <Link to="/biblioteca">
-          Biblioteca ({biblioteca.length})
-        </Link>
+        {usuario && (
+          <>
+            <Link to="/biblioteca">
+              Biblioteca ({biblioteca.length})
+            </Link>
 
-        <Link to="/amigos">Amigos</Link>
+            <Link to="/amigos">
+              Amigos
+            </Link>
 
-        <div className="notificaciones-container">
-          <button
-            className="notificaciones-btn"
-            onClick={() =>
-              setMostrarNotificaciones(
-                !mostrarNotificaciones
-              )
-            }
-          >
-            🔔
+            <div className="notificaciones-container">
+              <button
+                className="notificaciones-btn"
+                onClick={() =>
+                  setMostrarNotificaciones(
+                    !mostrarNotificaciones
+                  )
+                }
+              >
+                🔔
 
-            {notificaciones.length > 0 && (
-              <span className="notificaciones-badge">
-                {notificaciones.length}
-              </span>
-            )}
-          </button>
+                {notificaciones.length > 0 && (
+                  <span className="notificaciones-badge">
+                    {notificaciones.length}
+                  </span>
+                )}
+              </button>
 
-          {mostrarNotificaciones && (
-            <div className="notificaciones-panel">
-              <h4>Notificaciones</h4>
+              {mostrarNotificaciones && (
+                <div className="notificaciones-panel">
+                  <h4>Notificaciones</h4>
 
-              {notificaciones.map((notificacion, index) => (
-                <div
-                  className="notificacion-item"
-                  key={index}
-                >
-                  {notificacion}
+                  {notificaciones.map(
+                    (notificacion, index) => (
+                      <div
+                        className="notificacion-item"
+                        key={index}
+                      >
+                        {notificacion}
+                      </div>
+                    )
+                  )}
                 </div>
-              ))}
+              )}
             </div>
-          )}
-        </div>
+          </>
+        )}
 
         {usuario ? (
           <>
