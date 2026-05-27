@@ -161,3 +161,15 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+.mensaje-vacio {
+  background-color: #16202d;
+  padding: 30px;
+  border-radius: 12px;
+  margin-top: 25px;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.4);
+}
+
+.mensaje-vacio p {
+  color: #c7d5e0;
+}
