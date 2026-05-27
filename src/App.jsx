@@ -178,8 +178,8 @@ function Biblioteca({ biblioteca, instalarJuego }) {
                 )}
 
                 {juego.estadoInstalacion === "Instalado" && (
-                  <button className="btn btn-success" disabled>
-                    Instalado
+                  <button className="btn btn-success" onClick={() => alert(`Ejecutando ${juego.nombre}...`)}>
+                    Jugar
                   </button>
                 )}
               </div>
