@@ -173,3 +173,15 @@ body {
 .mensaje-vacio p {
   color: #c7d5e0;
 }
+
+.btn-disabled {
+  background-color: #8f98a0;
+  color: #1b2838;
+  cursor: not-allowed;
+}
+
+.btn-success {
+  background-color: #a4d007;
+  color: #1b2838;
+  cursor: default;
+}

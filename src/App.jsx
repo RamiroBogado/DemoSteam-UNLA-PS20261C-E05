@@ -140,7 +140,7 @@ function CompraJuego({ agregarABiblioteca, biblioteca }) {
   )
 }
 
-function Biblioteca({ biblioteca }) {
+function Biblioteca({ biblioteca, instalarJuego }) {
   return (
     <main className="container">
       <h1>Biblioteca de juegos</h1>
@@ -160,7 +160,28 @@ function Biblioteca({ biblioteca }) {
               <div className="card-info">
                 <h3>{juego.nombre}</h3>
                 <p>{juego.descripcion}</p>
-                <strong>Comprado</strong>
+
+                <strong>
+                  Estado: {juego.estadoInstalacion}
+                </strong>
+
+                {juego.estadoInstalacion === "Comprado" && (
+                  <button className="btn" onClick={() => instalarJuego(juego.id)}>
+                    Instalar
+                  </button>
+                )}
+
+                {juego.estadoInstalacion === "Instalando..." && (
+                  <button className="btn btn-disabled" disabled>
+                    Instalando...
+                  </button>
+                )}
+
+                {juego.estadoInstalacion === "Instalado" && (
+                  <button className="btn btn-success" disabled>
+                    Instalado
+                  </button>
+                )}
               </div>
             </div>
           ))}
@@ -177,8 +198,34 @@ function App() {
     const yaExiste = biblioteca.some((item) => item.id === juego.id)
 
     if (!yaExiste) {
-      setBiblioteca([...biblioteca, juego])
+      setBiblioteca([
+        ...biblioteca,
+        {
+          ...juego,
+          estadoInstalacion: "Comprado"
+        }
+      ])
     }
+  }
+
+  const instalarJuego = (id) => {
+    setBiblioteca((bibliotecaActual) =>
+      bibliotecaActual.map((juego) =>
+        juego.id === id
+          ? { ...juego, estadoInstalacion: "Instalando..." }
+          : juego
+      )
+    )
+
+    setTimeout(() => {
+      setBiblioteca((bibliotecaActual) =>
+        bibliotecaActual.map((juego) =>
+          juego.id === id
+            ? { ...juego, estadoInstalacion: "Instalado" }
+            : juego
+        )
+      )
+    }, 2000)
   }
 
   return (
@@ -197,7 +244,15 @@ function App() {
             />
           }
         />
-        <Route path="/biblioteca" element={<Biblioteca biblioteca={biblioteca} />} />
+        <Route
+          path="/biblioteca"
+          element={
+            <Biblioteca
+              biblioteca={biblioteca}
+              instalarJuego={instalarJuego}
+            />
+          }
+        />
       </Routes>
     </BrowserRouter>
   )
