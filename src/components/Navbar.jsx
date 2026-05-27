@@ -23,6 +23,8 @@ function Navbar({
           Biblioteca ({biblioteca.length})
         </Link>
 
+        <Link to="/amigos">Amigos</Link>
+
         <div className="notificaciones-container">
           <button
             className="notificaciones-btn"
