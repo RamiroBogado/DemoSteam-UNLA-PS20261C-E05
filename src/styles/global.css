@@ -288,3 +288,13 @@ body {
     padding: 24px;
   }
 }
+
+.footer {
+  margin-top: 60px;
+  background-color: #171a21;
+  padding: 22px;
+  text-align: center;
+  color: #8f98a0;
+  font-size: 14px;
+  border-top: 1px solid #2a475e;
+}
