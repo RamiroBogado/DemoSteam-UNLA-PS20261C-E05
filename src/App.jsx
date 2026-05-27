@@ -1,3 +1,5 @@
+import { BrowserRouter, Routes, Route, Link, useParams } from "react-router-dom"
+
 const juegos = [
   {
     id: 1,
@@ -85,44 +87,113 @@ const juegos = [
   }
 ]
 
-function App() {
+function Navbar() {
   return (
-    <div>
-      <nav className="navbar">
-        <h2>STEAM MVP</h2>
+    <nav className="navbar">
+      <h2>STEAM MVP</h2>
+
+      <div>
+        <Link to="/">Tienda</Link>
+        <Link to="/biblioteca">Biblioteca</Link>
+      </div>
+    </nav>
+  )
+}
+
+function Catalogo() {
+  return (
+    <main className="container">
+      <h1>Catálogo de videojuegos</h1>
+      <p>Explorá los juegos disponibles en la tienda.</p>
+
+      <div className="grid-juegos">
+        {juegos.map((juego) => (
+          <div className="card-juego" key={juego.id}>
+            <img src={juego.imagen} alt={juego.nombre} />
+
+            <div className="card-info">
+              <h3>{juego.nombre}</h3>
+              <p>{juego.descripcion}</p>
+
+              <strong>
+                {juego.precio === 0
+                  ? "Gratis"
+                  : `USD $${juego.precio.toFixed(2)}`}
+              </strong>
+
+              <Link className="btn" to={`/juego/${juego.id}`}>
+                Ver detalle
+              </Link>
+            </div>
+          </div>
+        ))}
+      </div>
+    </main>
+  )
+}
+
+function DetalleJuego() {
+  const { id } = useParams()
+  const juego = juegos.find((juego) => juego.id === Number(id))
+
+  if (!juego) {
+    return (
+      <main className="container">
+        <h1>Juego no encontrado</h1>
+        <Link className="btn" to="/">Volver al catálogo</Link>
+      </main>
+    )
+  }
+
+  return (
+    <main className="container">
+      <Link className="volver" to="/">← Volver al catálogo</Link>
+
+      <section className="detalle">
+        <img src={juego.imagen} alt={juego.nombre} />
 
         <div>
-          <button>Tienda</button>
-          <button>Biblioteca</button>
+          <h1>{juego.nombre}</h1>
+          <p>{juego.descripcion}</p>
+
+          <h3>
+            {juego.precio === 0
+              ? "Gratis"
+              : `USD $${juego.precio.toFixed(2)}`}
+          </h3>
+
+          <p className="detalle-texto">
+            Disponible en Steam MVP. Este videojuego puede agregarse al carrito
+            para continuar con el proceso de compra.
+          </p>
+
+          <button className="btn">Comprar</button>
         </div>
-      </nav>
+      </section>
+    </main>
+  )
+}
 
-      <main className="container">
-        <h1>Catálogo de videojuegos</h1>
-        <p>Explorá los juegos disponibles en la tienda.</p>
+function Biblioteca() {
+  return (
+    <main className="container">
+      <h1>Biblioteca</h1>
+      <p>Todavía no hay juegos comprados.</p>
+    </main>
+  )
+}
 
-        <div className="grid-juegos">
-          {juegos.map((juego) => (
-            <div className="card-juego" key={juego.id}>
-              <img src={juego.imagen} alt={juego.nombre} />
+function App() {
+  return (
+    <BrowserRouter>
+      <Navbar />
 
-              <div className="card-info">
-                <h3>{juego.nombre}</h3>
-                <p>{juego.descripcion}</p>
-
-                <strong>
-                  {juego.precio === 0
-                    ? "Gratis"
-                    : `USD $${juego.precio.toFixed(2)}`}
-                </strong>
-
-                <button>Ver detalle</button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </main>
-    </div>
+      <Routes>
+        <Route path="/" element={<Catalogo />} />
+        <Route path="/juego/:id" element={<DetalleJuego />} />
+        <Route path="/biblioteca" element={<Biblioteca />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 
