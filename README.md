@@ -120,11 +120,15 @@ npm run dev
 
 # Autores
 
-Bogado Ramiro
-Ulises Justo Saucedo
-Federico Salvatierra
-Federico Acosta Rosales
-Emanuel D'Onofrio
+-Bogado Ramiro
+
+-Ulises Justo Saucedo
+
+-Federico Salvatierra
+
+-Federico Acosta Rosales
+
+-Emanuel D'Onofrio
 
 Universidad Nacional de Lanús  
 Licenciatura en Sistemas
