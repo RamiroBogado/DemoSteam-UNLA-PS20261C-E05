@@ -16,13 +16,14 @@ const juegos = [
   { id: 12, nombre: "Palworld", precio: 29.99, imagen: "https://cdn.cloudflare.steamstatic.com/steam/apps/1623730/header.jpg", descripcion: "Supervivencia y criaturas estilo sandbox." }
 ]
 
-function Navbar() {
+function Navbar({ biblioteca }) {
   return (
     <nav className="navbar">
-      <h2>STEAM MVP</h2>
-      <div>
+      <Link className="logo" to="/">STEAM MVP</Link>
+
+      <div className="nav-links">
         <Link to="/">Tienda</Link>
-        <Link to="/biblioteca">Biblioteca</Link>
+        <Link to="/biblioteca">Biblioteca ({biblioteca.length})</Link>
       </div>
     </nav>
   )
@@ -31,18 +32,35 @@ function Navbar() {
 function Catalogo() {
   return (
     <main className="container">
-      <h1>Catálogo de videojuegos</h1>
-      <p>Explorá los juegos disponibles en la tienda.</p>
+      <section className="hero">
+        <div>
+          <span className="hero-badge">OFERTAS DE TEMPORADA</span>
+          <h1>Catálogo de videojuegos</h1>
+          <p>Explorá juegos disponibles, compralos y agregalos a tu biblioteca.</p>
+        </div>
+      </section>
+
+      <input className="buscador" placeholder="Buscar juegos..." />
 
       <div className="grid-juegos">
         {juegos.map((juego) => (
           <div className="card-juego" key={juego.id}>
             <img src={juego.imagen} alt={juego.nombre} />
+
             <div className="card-info">
               <h3>{juego.nombre}</h3>
               <p>{juego.descripcion}</p>
-              <strong>{juego.precio === 0 ? "Gratis" : `USD $${juego.precio.toFixed(2)}`}</strong>
-              <Link className="btn" to={`/juego/${juego.id}`}>Ver detalle</Link>
+
+              {juego.precio === 0 ? (
+                <span className="badge-gratis">Gratis</span>
+              ) : (
+                <strong>USD ${juego.precio.toFixed(2)}</strong>
+              )}
+
+              <div className="acciones-card">
+                <Link className="btn" to={`/juego/${juego.id}`}>Ver detalle</Link>
+                <Link className="btn btn-buy" to={`/compra/${juego.id}`}>Comprar</Link>
+              </div>
             </div>
           </div>
         ))}
@@ -70,14 +88,17 @@ function DetalleJuego() {
 
       <section className="detalle">
         <img src={juego.imagen} alt={juego.nombre} />
+
         <div>
           <h1>{juego.nombre}</h1>
           <p>{juego.descripcion}</p>
           <h3>{juego.precio === 0 ? "Gratis" : `USD $${juego.precio.toFixed(2)}`}</h3>
+
           <p className="detalle-texto">
             Disponible en Steam MVP. Este videojuego puede comprarse para agregarlo a la biblioteca.
           </p>
-          <Link className="btn" to={`/compra/${juego.id}`}>Comprar</Link>
+
+          <Link className="btn btn-buy" to={`/compra/${juego.id}`}>Comprar</Link>
         </div>
       </section>
     </main>
@@ -115,6 +136,7 @@ function CompraJuego({ agregarABiblioteca, biblioteca }) {
 
           <div className="checkout-juego">
             <img src={juego.imagen} alt={juego.nombre} />
+
             <div>
               <h2>{juego.nombre}</h2>
               <p>{juego.descripcion}</p>
@@ -132,7 +154,7 @@ function CompraJuego({ agregarABiblioteca, biblioteca }) {
           {yaComprado ? (
             <Link className="btn" to="/biblioteca">Ya está en biblioteca</Link>
           ) : (
-            <button className="btn" onClick={confirmarCompra}>Confirmar compra</button>
+            <button className="btn btn-buy" onClick={confirmarCompra}>Confirmar compra</button>
           )}
         </div>
       </section>
@@ -140,7 +162,7 @@ function CompraJuego({ agregarABiblioteca, biblioteca }) {
   )
 }
 
-function Biblioteca({ biblioteca, instalarJuego }) {
+function Biblioteca({ biblioteca, instalarJuego, ejecutarJuego }) {
   return (
     <main className="container">
       <h1>Biblioteca de juegos</h1>
@@ -153,34 +175,27 @@ function Biblioteca({ biblioteca, instalarJuego }) {
           <Link className="btn" to="/">Ir a la tienda</Link>
         </div>
       ) : (
-        <div className="grid-juegos">
+        <div className="grid-juegos biblioteca-grid">
           {biblioteca.map((juego) => (
             <div className="card-juego" key={juego.id}>
               <img src={juego.imagen} alt={juego.nombre} />
+
               <div className="card-info">
                 <h3>{juego.nombre}</h3>
                 <p>{juego.descripcion}</p>
 
-                <strong>
-                  Estado: {juego.estadoInstalacion}
-                </strong>
+                <strong>Estado: {juego.estadoInstalacion}</strong>
 
                 {juego.estadoInstalacion === "Comprado" && (
-                  <button className="btn" onClick={() => instalarJuego(juego.id)}>
-                    Instalar
-                  </button>
+                  <button className="btn" onClick={() => instalarJuego(juego.id)}>Instalar</button>
                 )}
 
                 {juego.estadoInstalacion === "Instalando..." && (
-                  <button className="btn btn-disabled" disabled>
-                    Instalando...
-                  </button>
+                  <button className="btn btn-disabled" disabled>Instalando...</button>
                 )}
 
                 {juego.estadoInstalacion === "Instalado" && (
-                  <button className="btn btn-success" onClick={() => alert(`Ejecutando ${juego.nombre}...`)}>
-                    Jugar
-                  </button>
+                  <button className="btn btn-success" onClick={() => ejecutarJuego(juego.nombre)}>Jugar</button>
                 )}
               </div>
             </div>
@@ -228,21 +243,20 @@ function App() {
     }, 2000)
   }
 
+  const ejecutarJuego = (nombreJuego) => {
+    alert(`Ejecutando ${nombreJuego}...`)
+  }
+
   return (
     <BrowserRouter>
-      <Navbar />
+      <Navbar biblioteca={biblioteca} />
 
       <Routes>
         <Route path="/" element={<Catalogo />} />
         <Route path="/juego/:id" element={<DetalleJuego />} />
         <Route
           path="/compra/:id"
-          element={
-            <CompraJuego
-              agregarABiblioteca={agregarABiblioteca}
-              biblioteca={biblioteca}
-            />
-          }
+          element={<CompraJuego agregarABiblioteca={agregarABiblioteca} biblioteca={biblioteca} />}
         />
         <Route
           path="/biblioteca"
@@ -250,6 +264,7 @@ function App() {
             <Biblioteca
               biblioteca={biblioteca}
               instalarJuego={instalarJuego}
+              ejecutarJuego={ejecutarJuego}
             />
           }
         />
