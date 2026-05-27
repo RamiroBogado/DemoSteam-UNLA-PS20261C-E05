@@ -8,6 +8,7 @@ import CompraJuego from "./pages/CompraJuego"
 import Biblioteca from "./pages/Biblioteca"
 
 import Login from "./pages/Login"
+import Register from "./pages/Register"
 
 function App() {
   const [biblioteca, setBiblioteca] = useState([])
@@ -71,6 +72,8 @@ function App() {
         <Route path="/" element={<Catalogo />} />
 
         <Route path="/login" element={<Login iniciarSesion={iniciarSesion} />} />
+
+        <Route path="/register" element={<Register iniciarSesion={iniciarSesion} />} />
 
         <Route path="/juego/:id" element={<DetalleJuego />} />
 
