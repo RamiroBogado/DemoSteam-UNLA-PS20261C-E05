@@ -7,8 +7,19 @@ import DetalleJuego from "./pages/DetalleJuego"
 import CompraJuego from "./pages/CompraJuego"
 import Biblioteca from "./pages/Biblioteca"
 
+import Login from "./pages/Login"
+
 function App() {
   const [biblioteca, setBiblioteca] = useState([])
+  const [usuario, setUsuario] = useState(null)
+
+  const iniciarSesion = (usuarioLogueado) => {
+    setUsuario(usuarioLogueado)
+  }
+
+  const cerrarSesion = () => {
+    setUsuario(null)
+  }
 
   const agregarABiblioteca = (juego) => {
     const yaExiste = biblioteca.some((item) => item.id === juego.id)
@@ -50,15 +61,18 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Navbar biblioteca={biblioteca} />
+      <Navbar
+        biblioteca={biblioteca}
+        usuario={usuario}
+        cerrarSesion={cerrarSesion}
+      />
 
       <Routes>
         <Route path="/" element={<Catalogo />} />
 
-        <Route
-          path="/juego/:id"
-          element={<DetalleJuego />}
-        />
+        <Route path="/login" element={<Login iniciarSesion={iniciarSesion} />} />
+
+        <Route path="/juego/:id" element={<DetalleJuego />} />
 
         <Route
           path="/compra/:id"
