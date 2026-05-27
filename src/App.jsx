@@ -15,6 +15,12 @@ function App() {
   const [biblioteca, setBiblioteca] = useState([])
   const [usuario, setUsuario] = useState(null)
 
+  const [notificaciones] = useState([
+    "Oferta de verano disponible",
+    "Cyberpunk 2077 está listo para jugar",
+    "Nuevo amigo conectado"
+  ])
+
   const iniciarSesion = (usuarioLogueado) => {
     setUsuario(usuarioLogueado)
   }
@@ -67,6 +73,7 @@ function App() {
         biblioteca={biblioteca}
         usuario={usuario}
         cerrarSesion={cerrarSesion}
+        notificaciones={notificaciones}
       />
 
       <Routes>
