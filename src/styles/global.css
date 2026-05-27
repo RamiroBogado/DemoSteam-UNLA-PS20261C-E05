@@ -370,3 +370,13 @@ body {
   text-decoration: none;
   font-weight: bold;
 }
+
+.mensaje-recuperacion {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.mensaje-recuperacion strong {
+  color: #a4d007;
+}

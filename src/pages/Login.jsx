@@ -54,6 +54,12 @@ function Login({ iniciarSesion }) {
           >
             Iniciar sesión
           </button>
+
+          <p className="auth-link">
+  <Link to="/recuperar-password">
+    ¿Olvidaste tu contraseña?
+  </Link>
+</p>
         </form>
 
         <p className="auth-link">

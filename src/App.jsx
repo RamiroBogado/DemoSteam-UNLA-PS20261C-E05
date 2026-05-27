@@ -9,6 +9,7 @@ import Biblioteca from "./pages/Biblioteca"
 
 import Login from "./pages/Login"
 import Register from "./pages/Register"
+import RecuperarPassword from "./pages/RecuperarContrasena"
 
 function App() {
   const [biblioteca, setBiblioteca] = useState([])
@@ -74,6 +75,8 @@ function App() {
         <Route path="/login" element={<Login iniciarSesion={iniciarSesion} />} />
 
         <Route path="/register" element={<Register iniciarSesion={iniciarSesion} />} />
+
+        <Route path="/recuperar-password" element={<RecuperarPassword />} />
 
         <Route path="/juego/:id" element={<DetalleJuego />} />
 
