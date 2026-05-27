@@ -1,0 +1,10 @@
+function App() {
+  return (
+    <div>
+      <h1>Steam MVP</h1>
+      <p>Mi primera demo frontend</p>
+    </div>
+  )
+}
+
+export default App
