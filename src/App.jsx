@@ -2,19 +2,27 @@ import { useState } from "react"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 
 import Navbar from "./components/Navbar"
+import ProtectedRoute from "./components/ProtectedRoute"
+
 import Catalogo from "./pages/Catalogo"
 import DetalleJuego from "./pages/DetalleJuego"
 import CompraJuego from "./pages/CompraJuego"
 import Biblioteca from "./pages/Biblioteca"
-
 import Login from "./pages/Login"
 import Register from "./pages/Register"
 import RecuperarPassword from "./pages/RecuperarContrasena"
 import Amigos from "./pages/Amigos"
 
 function App() {
-  const [biblioteca, setBiblioteca] = useState([])
-  const [usuario, setUsuario] = useState(null)
+  const [biblioteca, setBiblioteca] = useState(() => {
+    const bibliotecaGuardada = localStorage.getItem("biblioteca")
+    return bibliotecaGuardada ? JSON.parse(bibliotecaGuardada) : []
+  })
+
+  const [usuario, setUsuario] = useState(() => {
+    const usuarioGuardado = localStorage.getItem("usuario")
+    return usuarioGuardado ? JSON.parse(usuarioGuardado) : null
+  })
 
   const [notificaciones] = useState([
     "Oferta de verano disponible",
@@ -24,43 +32,52 @@ function App() {
 
   const iniciarSesion = (usuarioLogueado) => {
     setUsuario(usuarioLogueado)
+    localStorage.setItem("usuario", JSON.stringify(usuarioLogueado))
   }
 
   const cerrarSesion = () => {
     setUsuario(null)
+    localStorage.removeItem("usuario")
   }
 
   const agregarABiblioteca = (juego) => {
     const yaExiste = biblioteca.some((item) => item.id === juego.id)
 
     if (!yaExiste) {
-      setBiblioteca([
+      const nuevaBiblioteca = [
         ...biblioteca,
         {
           ...juego,
           estadoInstalacion: "Comprado"
         }
-      ])
+      ]
+
+      setBiblioteca(nuevaBiblioteca)
+      localStorage.setItem("biblioteca", JSON.stringify(nuevaBiblioteca))
     }
   }
 
   const instalarJuego = (id) => {
-    setBiblioteca((bibliotecaActual) =>
-      bibliotecaActual.map((juego) =>
-        juego.id === id
-          ? { ...juego, estadoInstalacion: "Instalando..." }
-          : juego
-      )
+    const bibliotecaInstalando = biblioteca.map((juego) =>
+      juego.id === id
+        ? { ...juego, estadoInstalacion: "Instalando..." }
+        : juego
     )
 
+    setBiblioteca(bibliotecaInstalando)
+    localStorage.setItem("biblioteca", JSON.stringify(bibliotecaInstalando))
+
     setTimeout(() => {
-      setBiblioteca((bibliotecaActual) =>
-        bibliotecaActual.map((juego) =>
+      setBiblioteca((bibliotecaActual) => {
+        const bibliotecaInstalada = bibliotecaActual.map((juego) =>
           juego.id === id
             ? { ...juego, estadoInstalacion: "Instalado" }
             : juego
         )
-      )
+
+        localStorage.setItem("biblioteca", JSON.stringify(bibliotecaInstalada))
+        return bibliotecaInstalada
+      })
     }, 2000)
   }
 
@@ -82,32 +99,49 @@ function App() {
 
         <Route path="/login" element={<Login iniciarSesion={iniciarSesion} />} />
 
-        <Route path="/register" element={<Register iniciarSesion={iniciarSesion} />} />
+        <Route
+          path="/register"
+          element={<Register iniciarSesion={iniciarSesion} />}
+        />
 
-        <Route path="/recuperar-password" element={<RecuperarPassword />} />
-        
-        <Route path="/amigos" element={<Amigos />} />
+        <Route
+          path="/recuperar-password"
+          element={<RecuperarPassword />}
+        />
 
         <Route path="/juego/:id" element={<DetalleJuego />} />
 
         <Route
           path="/compra/:id"
           element={
-            <CompraJuego
-              agregarABiblioteca={agregarABiblioteca}
-              biblioteca={biblioteca}
-            />
+            <ProtectedRoute usuario={usuario}>
+              <CompraJuego
+                agregarABiblioteca={agregarABiblioteca}
+                biblioteca={biblioteca}
+              />
+            </ProtectedRoute>
           }
         />
 
         <Route
           path="/biblioteca"
           element={
-            <Biblioteca
-              biblioteca={biblioteca}
-              instalarJuego={instalarJuego}
-              ejecutarJuego={ejecutarJuego}
-            />
+            <ProtectedRoute usuario={usuario}>
+              <Biblioteca
+                biblioteca={biblioteca}
+                instalarJuego={instalarJuego}
+                ejecutarJuego={ejecutarJuego}
+              />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/amigos"
+          element={
+            <ProtectedRoute usuario={usuario}>
+              <Amigos />
+            </ProtectedRoute>
           }
         />
       </Routes>
